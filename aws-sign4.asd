@@ -28,10 +28,11 @@
                :secret-values)
   :serial t
   :components ((:file "package")
-               (:file "aws-sign4")))
+               (:file "aws-sign4"))
+  :in-order-to ((test-op (test-op #:aws-sign4/tests))))
 
-(defsystem #:aws-sign4-example
-  :name "aws-sign4-example"
+(defsystem #:aws-sign4/example
+  :name "aws-sign4/example"
   :licence "Example"
   :depends-on (:aws-sign4 :drakma)
   :components ((:module example
@@ -39,8 +40,8 @@
                         :components ((:file "package")
                                      (:file "example")))))
 
-(defsystem #:aws-sign4-tests
-  :name "aws-sign4-tests"
+(defsystem #:aws-sign4/tests
+  :name "aws-sign4/tests"
   :licence "GNU Lesser General Public Licence 3.0"
   :author "Thomas Bakketun <thomas.bakketun@copyleft.no>"
   :description "Tests for aws-sign4"
@@ -48,10 +49,7 @@
   :components ((:module tests
                         :serial t
                         :components ((:file "package")
-                                     (:file "test")))))
-
-(defmethod perform ((o test-op) (c (eql (find-system '#:aws-sign4))))
-  (operate 'load-op '#:aws-sign4-tests)
-  (funcall (find-symbol (string :run-tests)
-                        :aws-sign4-tests)))
+                                     (:file "test"))))
+  :perform (test-op (op c) 
+             (uiop:symbol-call :aws-sign4-tests :run-tests)))
 
